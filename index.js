@@ -8,11 +8,16 @@ async function basicPlugin (fastify, opts) {
   if (typeof opts.validate !== 'function') {
     throw new Error('Basic Auth: Missing validate function')
   }
+
+  const decorate = opts.decorate === undefined || opts.decorate === null ? true : opts.decorate
   const authenticateHeader = getAuthenticateHeader(opts.authenticate)
   const header = (opts.header && opts.header.toLowerCase()) || 'authorization'
 
   const validate = opts.validate.bind(fastify)
-  fastify.decorate('basicAuth', basicAuth)
+
+  if (decorate) {
+    fastify.decorate('basicAuth', basicAuth)
+  }
 
   function basicAuth (req, reply, next) {
     const credentials = auth.parse(req.headers[header])

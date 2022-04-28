@@ -6,6 +6,54 @@ const basicAuth = require('./index')
 const fastifyAuth = require('fastify-auth')
 const { Unauthorized } = require('http-errors')
 
+test('Expect decorate', async t => {
+  t.plan(1)
+
+  const fastify = Fastify()
+  await fastify.register(basicAuth, { validate, decorate: true })
+
+  function validate (username, password, req, res, done) {
+    if (username === 'user' && password === 'pwd') {
+      done()
+    } else {
+      done(new Error('Unauthorized'))
+    }
+  }
+  t.ok(fastify.basicAuth)
+})
+
+test('Expect not decorate', async t => {
+  t.plan(1)
+
+  const fastify = Fastify()
+  await fastify.register(basicAuth, { validate, decorate: false })
+
+  function validate (username, password, req, res, done) {
+    if (username === 'user' && password === 'pwd') {
+      done()
+    } else {
+      done(new Error('Unauthorized'))
+    }
+  }
+  t.notOk(fastify.basicAuth)
+})
+
+test('Expect default decorate', async t => {
+  t.plan(1)
+
+  const fastify = Fastify()
+  await fastify.register(basicAuth, { validate })
+
+  function validate (username, password, req, res, done) {
+    if (username === 'user' && password === 'pwd') {
+      done()
+    } else {
+      done(new Error('Unauthorized'))
+    }
+  }
+  t.ok(fastify.basicAuth)
+})
+
 test('Basic', t => {
   t.plan(2)
 

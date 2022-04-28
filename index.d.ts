@@ -6,14 +6,15 @@ import {
   preParsingHookHandler,
   preValidationHookHandler,
   preHandlerHookHandler,
-  FastifyInstance
-} from 'fastify'
+  FastifyInstance,
+} from "fastify";
 
-declare module 'fastify' {
+declare module "fastify" {
   interface FastifyInstance {
-    basicAuth: onRequestHookHandler |
-      preValidationHookHandler |
-      preHandlerHookHandler
+    basicAuth:
+      | onRequestHookHandler
+      | preValidationHookHandler
+      | preHandlerHookHandler;
   }
 }
 
@@ -28,7 +29,8 @@ export interface FastifyBasicAuthOptions {
   ): void | Promise<void>;
   authenticate?: boolean | { realm: string };
   header?: string;
+  decorate?: boolean;
 }
 
-declare const fastifyBasicAuth: FastifyPlugin<FastifyBasicAuthOptions>
+declare const fastifyBasicAuth: FastifyPlugin<FastifyBasicAuthOptions>;
 export default fastifyBasicAuth;
